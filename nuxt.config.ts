@@ -73,4 +73,15 @@ export default defineNuxtConfig({
   tiptap: {
     prefix: 'Tiptap',
   },
+  app: {
+    head: {
+      title: 'Resumate',
+      htmlAttrs: {
+        lang: 'en',
+      },
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/images/resumate-favicon.ico' },
+      ]
+    }
+  }
 })

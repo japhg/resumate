@@ -82,6 +82,15 @@ const addReference = () => {
 const removeReference = (key: number) => {
   props.state.references.splice(key, 1);
 };
+
+watch(
+  () => props.state.image,
+  (newFile) => {
+    if (newFile instanceof File) {
+      props.state.imagePreview = URL.createObjectURL(newFile);
+    }
+  }
+);
 </script>
 <template>
   <div class="bg-white rounded-lg shadow-lg">
@@ -129,6 +138,15 @@ const removeReference = (key: number) => {
               placeholder="Location"
               id="location"
               type="text"
+              class="block w-full"
+            />
+          </div>
+          <div class="col-span-2">
+            <FileUploadField
+              v-model="props.state.image"
+              name="featured_image"
+              id="image"
+              placeholder="Profile Image"
               class="block w-full"
             />
           </div>

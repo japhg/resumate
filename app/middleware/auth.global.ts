@@ -1,13 +1,15 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async (to) => {
     const user = await getCurrentUser()
 
-    // Check if the user is authenticated and navigate to login page
-    if (user && to.name == 'login') {
-        return navigateTo('/')
+    const guestRoutes = ['login', 'register'] // allow guests here
+
+    // If logged in and tries to visit guest-only routes → redirect home
+    if (user && guestRoutes.includes(to.name)) {
+        return navigateTo('/', { replace: true })
     }
 
-    // Check if the user is not authenticated
-    if (!user && to.name != 'login') {
-        return navigateTo('/login')
+    // If not logged in and tries to visit a protected route → redirect login
+    if (!user && !guestRoutes.includes(to.name)) {
+        return navigateTo('/login', { replace: true })
     }
-});
+})

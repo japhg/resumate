@@ -22,6 +22,10 @@ const exportResumeToPdf = () => {
     <!-- Resume Preview -->
     <div>
       <div class="bg-white rounded-lg p-6 max-w-2xl" ref="pdfSection">
+        <div>
+          <img :src="state.image" alt="" />
+        </div>
+        
         <div class="text-center mb-6">
           <h1 class="text-xl font-bold text-gray-900">
             {{ state.fullName }}

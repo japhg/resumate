@@ -1,4 +1,5 @@
 import { doc, setDoc, onSnapshot } from "firebase/firestore";
+import { getDownloadURL, getStorage, uploadBytes, ref as storageRef } from "firebase/storage";
 import { languages } from "monaco-editor";
 import { reactive } from "vue";
 
@@ -13,6 +14,7 @@ export function useResume() {
         email: "juan.delacruz@example.com",
         phone: "(+63) 912 3456 789",
         location: "Quezon City, Metropolitan Manila",
+        image: "",
         summary:
             "Experienced software developer with 5+ years of expertise in building scalable web apps...",
         workingExperiences: [
@@ -52,6 +54,19 @@ export function useResume() {
     };
 
     const saveResume = async () => {
+        const storage = getStorage();
+
+        if (typeof state.image === "object" && state.image !== null && (state.image as File).type && (state.image as File).size !== undefined) {
+            const imageRef = storageRef(storage, `resumes/${user.value?.uid}/profile.jpg`);
+            await uploadBytes(imageRef, state.image as File);
+
+            // Get the download URL
+            const downloadURL = await getDownloadURL(imageRef);
+
+            // Replace the File object with the Firebase URL
+            state.image = downloadURL;
+        }
+
         await setDoc(resumeRef, { ...state }, { merge: true });
     };
 

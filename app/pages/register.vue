@@ -1,50 +1,23 @@
 <script setup lang="ts">
-import {
-  createUserWithEmailAndPassword,
-  FacebookAuthProvider,
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
-const auth = useFirebaseAuth();
 const userAuth = getAuth();
 
 const router = useRouter();
 
 const form = reactive({
-	email: "",
-	password: "",
+  name: "",
+  email: "",
+  password: "",
 });
 
-const handleSignInButton = () => {
+const handleSignUpButton = () => {
   createUserWithEmailAndPassword(userAuth, form.email, form.password)
     .then(() => {
       router.replace("/");
     })
     .catch((error) => {
       console.error(error);
-    });
-};
-
-const signInWithGoogle = () => {
-  if (!auth) return;
-  signInWithPopup(auth, new GoogleAuthProvider())
-    .then(() => {
-      router.replace("/");
-    })
-    .catch((error) => console.log(error));
-};
-
-const signInWithFacebook = () => {
-  console.log("clicked!");
-  if (!auth) return;
-  signInWithPopup(auth, new FacebookAuthProvider())
-    .then(() => {
-      router.replace("/");
-    })
-    .catch((error) => {
-      console.log(error);
     });
 };
 </script>
@@ -62,12 +35,23 @@ const signInWithFacebook = () => {
         <h2
           class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900"
         >
-          Sign in to your account
+          Sign up an account
         </h2>
       </div>
 
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form action="#" method="POST" class="space-y-6">
+          <div>
+            <TextField
+              id="name"
+              type="text"
+              name="name"
+              label="Name"
+              v-model="form.name"
+              required
+              autocomplete="name"
+            />
+          </div>
           <div>
             <TextField
               id="email"
@@ -90,40 +74,16 @@ const signInWithFacebook = () => {
               required
               autocomplete="current-password"
             />
-            <div class="mt-2">
-              <div class="text-sm">
-                <a href="#" class="font-semibold text-black hover:text-black">
-                  Forgot password?
-                </a>
-              </div>
-            </div>
           </div>
 
           <div class="flex flex-col gap-2">
-            <PrimaryButton type="submit" @click="handleSignInButton">
-              Sign in
-            </PrimaryButton>
-            <PrimaryButton
-              type="button"
-              icon="pi pi-google"
-              @click="signInWithGoogle"
-            >
-              Sign in with Google
-            </PrimaryButton>
-            <PrimaryButton
-              type="button"
-              icon="pi pi-facebook"
-              @click="signInWithFacebook"
-            >
-              Sign in with Facebook
+            <PrimaryButton type="submit" @click="handleSignUpButton">
+              Register
             </PrimaryButton>
 
             <div class="flex justify-center mt-5">
-              <NuxtLink
-                to="/register"
-                class="text-black hover:underline text-sm"
-              >
-                Don't have an account? Sign Up
+              <NuxtLink to="/login" class="text-black hover:underline text-sm">
+                Already have an account? Sign In
               </NuxtLink>
             </div>
           </div>
